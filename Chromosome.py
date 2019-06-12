@@ -6,6 +6,7 @@ class Chromosome(object):
     def __init__(self, config):
         self.config = config
         self.genes = [0 for i in range(0, self.config.NO_OF_GENES)]
+        self.fitness = 0
     
     def mutate(self):
         for i in range(0, len(self.genes)):
@@ -16,3 +17,7 @@ class Chromosome(object):
         if geneValue == 0:
             return 1
         return 0
+    
+    def crossOver(self, chromosome):
+        pass
+        
