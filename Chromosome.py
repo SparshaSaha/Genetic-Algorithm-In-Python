@@ -17,7 +17,3 @@ class Chromosome(object):
         if geneValue == 0:
             return 1
         return 0
-    
-    def crossOver(self, chromosome):
-        pass
-        
