@@ -5,7 +5,7 @@ class Chromosome(object):
     
     def __init__(self, config):
         self.config = config
-        self.genes = [0 for i in range(0, self.config.NO_OF_GENES)]
+        self.genes = [random.randint(0, 1) for i in range(0, self.config.NO_OF_GENES)]
         self.fitness = 0
     
     def mutate(self):

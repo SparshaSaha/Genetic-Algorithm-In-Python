@@ -6,3 +6,4 @@ class Config(object):
         self.POPULATION_SIZE = 100
         self.IDEAL_FITNESS = 1000
         self.FITNESS_CATEGORY = "maximize"
+        self.CROSSOVER_PROBABILITY = 0.6
