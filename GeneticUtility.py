@@ -30,11 +30,9 @@ class GeneticUtility(object):
         else:
             chromosomeToConsider2 = chromosome2
 
-
-        print(chromosome1.genes)
-        print(chromosome2.genes)
-        print(crossoverPoint)
-
+        # print(chromosome1.genes)
+        # print(chromosome2.genes)
+        # print(crossoverPoint)
         return chromosomeToConsider1, chromosomeToConsider2
 
 config = Config()
