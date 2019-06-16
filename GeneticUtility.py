@@ -55,6 +55,9 @@ class GeneticUtility(object):
             # Calculate Fitnesses
             for chromosome in chromosomes:
                 fitnessValue = self.fitness(chromosome)
+                if self.config.FITNESS_CATEGORY == 'minimize':
+                    fitnessValue *= -1
+                chromosome.originalFitness = fitnessValue
                 chromosome.fitness = fitnessValue
             
             # Origin shift chromosomes in case of negative fitness values
@@ -83,16 +86,15 @@ class GeneticUtility(object):
             
             # Sort Chromosomes based on fitness values
             chromosomes.sort(key = lambda x : x.fitness, reverse = True)
-
-            print(self.GENERATION_COUNT, chromosomes[0].genes, chromosomes[0].fitness)
-
-            for i in chromosomes:
-                if self.fitness(i) != i.fitness:
-                    print(i.genes, i.fitness)
             
             # Save best individual
             if chromosomes[0].fitness > bestIndividual.fitness:
                 bestIndividual = chromosomes[0]
+            
+            # Check if Ideal fitness has been reached
+            # If so, then return
+            if bestIndividual.originalFitness == self.config.IDEAL_FITNESS:
+                return bestIndividual
             
             # Carry over Elites to next Generation
             for i in range(0, self.config.ELITE_CARRY_OVER):
@@ -110,13 +112,10 @@ class GeneticUtility(object):
         fitness = 0.0
 
         for i in range(0, len(testChrom.genes)):
-            fitness += -1 * pow((chromosome.genes[i] - testChrom.genes[i]), 2)
+            fitness += pow((chromosome.genes[i] - testChrom.genes[i]), 2)
         return fitness
     
 
 config = Config()
 g = GeneticUtility(config)
 print(g.simulateEvolution(100).genes)
-# x = Chromosome(config)
-# x.genes = [0, 1 , 0, 1]
-# print(g.fitness(x))
