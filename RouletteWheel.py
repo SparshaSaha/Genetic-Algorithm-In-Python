@@ -49,33 +49,3 @@ class RouletteWheel(object):
     def __getNomalizedFitness__(self):
         for chromosome in self.chromosomes:
             chromosome.normalizedFitness = chromosome.fitness / self.cumSum
-
-config = Config()
-c1 = Chromosome(config)
-c2 = Chromosome(config)
-c3 = Chromosome(config)
-
-c1.fitness = 23
-c2.fitness = 43
-c3.fitness = 5
-
-chromosomes = [c1, c2, c3]
-r = RouletteWheel(chromosomes, config)
-print("Genes", c1.genes, c2.genes, c3.genes)
-
-c11 = 0
-c12 = 0
-c13 = 0
-
-for i in range(0, 10):
-    cx, cz = r.RouletteWheelSelection()
-    if cx.genes == c1.genes or cz.genes == c1.genes:
-        c11+=1
-    
-    if cx.genes == c2.genes or cz.genes == c2.genes:
-        c12+=1
-
-    if cx.genes == c3.genes or cz.genes == c3.genes:
-        c13+=1
-
-print(c11,c12,c13)
