@@ -34,11 +34,23 @@ class GeneticUtility(object):
         # print(chromosome2.genes)
         # print(crossoverPoint)
         return chromosomeToConsider1, chromosomeToConsider2
+    
+    def originShiftIfNegativeFitnesses(self, chromosomes):
+        # Find minimum fitness
+        minimumFitness = min(chromosome.fitness for chromosome in chromosomes)
+
+        if minimumFitness >= 0:
+            return
+        
+        for chromosome in chromosomes:
+            chromosome.fitness += minimumFitness * -1
+    
 
 config = Config()
 g = GeneticUtility(config)
 c1 = Chromosome(config)
 c2 = Chromosome(config)
-
-c1, c2 = g.crossover(c1, c2)
-print(c1.genes, c2.genes)
+c1.fitness = -10
+c2.fitness = -20
+g.originShiftIfNegativeFitnesses([c1, c2])
+print(c1.fitness, c2.fitness)
