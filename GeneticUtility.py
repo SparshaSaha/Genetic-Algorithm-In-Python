@@ -3,7 +3,7 @@ import copy
 
 from Chromosome import Chromosome
 from Config import Config
-from RouletteWheel import RouletteWheel
+from SelectionAlgorithms.RouletteWheel import RouletteWheel
 
 class GeneticUtility(object):
 
@@ -33,7 +33,6 @@ class GeneticUtility(object):
         else:
             chromosomeToConsider2.genes = chromosome2.genes.copy()
 
-
         return chromosomeToConsider1, chromosomeToConsider2
     
     def __originShiftIfNegativeFitnesses__(self, chromosomes):
@@ -52,6 +51,7 @@ class GeneticUtility(object):
         bestIndividual.fitness = -99
         
         for generation in range(0, noOfGeneration):
+            print("Running for Generation " + str(self.GENERATION_COUNT))
             # Calculate Fitnesses
             for chromosome in chromosomes:
                 fitnessValue = self.fitness(chromosome)
@@ -108,7 +108,7 @@ class GeneticUtility(object):
 
     def fitness(self, chromosome):
         testChrom = Chromosome(self.config)
-        testChrom.genes = [1, 1, 1, 1]
+        testChrom.genes = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
         fitness = 0.0
 
         for i in range(0, len(testChrom.genes)):
