@@ -15,7 +15,7 @@ class Chromosome(object):
             if random.uniform(0, 1) <= self.config.MUTATION_PROBABILITY:
                 self.genes[i] = self.__flipGene__(self.genes[i])
     
-    def __flip__(self, geneValue):
+    def __flipGene__(self, geneValue):
         if geneValue == 0:
             return 1
         return 0
