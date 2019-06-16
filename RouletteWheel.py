@@ -8,11 +8,9 @@ class RouletteWheel(object):
     def __init__(self, chromosomes, config):
         self.chromosomes = chromosomes
         self.config = config
+        self.__createCumulativeProbabilities__()
     
     def RouletteWheelSelection(self):
-
-        self.__createCumulativeProbabilities__()
-
         # Select first chromosome
         random1 = random.uniform(0, 1)
         chromosome1 = None
