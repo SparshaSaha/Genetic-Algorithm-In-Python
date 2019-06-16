@@ -1,4 +1,5 @@
 import random
+import copy
 
 from Chromosome import Chromosome
 from Config import Config
@@ -25,12 +26,13 @@ class GeneticUtility(object):
         if random.uniform(0, 1) <= config.CROSSOVER_PROBABILITY:
             chromosomeToConsider1.genes = child1Genes
         else:
-            chromosomeToConsider1 = chromosome1
+            chromosomeToConsider1.genes = chromosome1.genes.copy()
         
         if random.uniform(0, 1) <= config.CROSSOVER_PROBABILITY:
             chromosomeToConsider2.genes = child2Genes
         else:
-            chromosomeToConsider2 = chromosome2
+            chromosomeToConsider2.genes = chromosome2.genes.copy()
+
 
         return chromosomeToConsider1, chromosomeToConsider2
     
@@ -44,51 +46,77 @@ class GeneticUtility(object):
         for chromosome in chromosomes:
             chromosome.fitness += minimumFitness * -1
     
-    def simulateEvolution(self):
+    def simulateEvolution(self, noOfGeneration):
         chromosomes = [Chromosome(self.config) for i in range(0, self.config.POPULATION_SIZE)]
+        bestIndividual = Chromosome(self.config)
+        bestIndividual.fitness = -99
         
-        # Calculate Fitnesses
-        for chromosome in chromosomes:
-            fitnessValue = self.fitness(chromosome)
-            chromosome.fitness = fitnessValue
-            print(chromosome.genes, chromosome.fitness)
+        for generation in range(0, noOfGeneration):
+            # Calculate Fitnesses
+            for chromosome in chromosomes:
+                fitnessValue = self.fitness(chromosome)
+                chromosome.fitness = fitnessValue
+            
+            # Origin shift chromosomes in case of negative fitness values
+            self.__originShiftIfNegativeFitnesses__(chromosomes)
+
+            rouletteWheel = RouletteWheel(chromosomes, self.config)
+            nextGenChromosomes = []
+
+            # Create next Generation
+            for i in range(0, int(self.config.POPULATION_SIZE / 2)):
+                # Select two chromosomes from roulette wheel
+                chromosome1, chromosome2 = rouletteWheel.RouletteWheelSelection()
+
+                # Cross Over the chromosomes
+                chromosome1, chromosome2 = self.__crossover__(chromosome1, chromosome2)
+                
+                # Mutate the new chromosomes
+                chromosome1.mutate()
+                chromosome2.mutate()
+
+                # Add them to the New Generation Pool
+                nextGenChromosomes.append(chromosome1)
+                nextGenChromosomes.append(chromosome2)
+            
+            # Add Elites to next Generation
+            
+            # Sort Chromosomes based on fitness values
+            chromosomes.sort(key = lambda x : x.fitness, reverse = True)
+
+            print(self.GENERATION_COUNT, chromosomes[0].genes, chromosomes[0].fitness)
+
+            for i in chromosomes:
+                if self.fitness(i) != i.fitness:
+                    print(i.genes, i.fitness)
+            
+            # Save best individual
+            if chromosomes[0].fitness > bestIndividual.fitness:
+                bestIndividual = chromosomes[0]
+            
+            # Carry over Elites to next Generation
+            for i in range(0, self.config.ELITE_CARRY_OVER):
+                nextGenChromosomes[len(nextGenChromosomes) - i - 1] = chromosomes[len(chromosomes) - i -1]
+            
+            self.GENERATION_COUNT += 1
+            chromosomes = nextGenChromosomes
+        return bestIndividual
+
         
-        # Origin shift chromosomes in case of negative fitness values
-        self.__originShiftIfNegativeFitnesses__(chromosomes)
-
-        rouletteWheel = RouletteWheel(chromosomes)
-        nextGenChromosomes = []
-
-        for i in range(0, self.config.POPULATION_SIZE):
-            # Select two chromosomes from roulette wheel
-            chromosome1, chromosome2 = rouletteWheel.RouletteWheelSelection()
-
-            # Cross Over the chromosomes
-            chromosome1, chromosome2 = self.__crossover__(chromosome1, chromosome2)
-            
-            # Mutate the new chromosomes
-            chromosome1.mutate()
-            chromosome2.mutate()
-
-            # Add them to the New Generation Pool
-            
-
-
-
-
-
 
     def fitness(self, chromosome):
         testChrom = Chromosome(self.config)
-        testChrom.gene = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-        fitness = -1 * sum((chromosome.genes[i] - testChrom.genes[i]) ** 2 for i in range(0, len(chromosome.genes)))
+        testChrom.genes = [1, 1, 1, 1]
+        fitness = 0.0
+
+        for i in range(0, len(testChrom.genes)):
+            fitness += -1 * pow((chromosome.genes[i] - testChrom.genes[i]), 2)
         return fitness
     
 
 config = Config()
 g = GeneticUtility(config)
-c1 = Chromosome(config)
-c2 = Chromosome(config)
-c1.fitness = -10
-c2.fitness = -20
-g.simulateEvolution()
+print(g.simulateEvolution(100).genes)
+# x = Chromosome(config)
+# x.genes = [0, 1 , 0, 1]
+# print(g.fitness(x))
