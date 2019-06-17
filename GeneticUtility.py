@@ -48,14 +48,18 @@ class GeneticUtility(object):
     def simulateEvolution(self, noOfGeneration, fitnessFunction):
         chromosomes = [Chromosome(self.config) for i in range(0, self.config.POPULATION_SIZE)]
         bestIndividual = Chromosome(self.config)
-        bestIndividual.fitness = -99
+        bestIndividual.fitness = -1
         
         for generation in range(0, noOfGeneration):
             print("Running for Generation " + str(self.GENERATION_COUNT))
+
             # Calculate Fitnesses
             for chromosome in chromosomes:
                 fitnessValue = fitnessFunction(chromosome)
+
                 if self.config.FITNESS_CATEGORY == 'minimize':
+                    
+                    # Reverse fitness in case of reverse category
                     fitnessValue *= -1
                 chromosome.originalFitness = fitnessValue
                 chromosome.fitness = fitnessValue
