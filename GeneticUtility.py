@@ -45,7 +45,7 @@ class GeneticUtility(object):
         for chromosome in chromosomes:
             chromosome.fitness += minimumFitness * -1
     
-    def simulateEvolution(self, noOfGeneration):
+    def simulateEvolution(self, noOfGeneration, fitnessFunction):
         chromosomes = [Chromosome(self.config) for i in range(0, self.config.POPULATION_SIZE)]
         bestIndividual = Chromosome(self.config)
         bestIndividual.fitness = -99
@@ -54,7 +54,7 @@ class GeneticUtility(object):
             print("Running for Generation " + str(self.GENERATION_COUNT))
             # Calculate Fitnesses
             for chromosome in chromosomes:
-                fitnessValue = self.fitness(chromosome)
+                fitnessValue = fitnessFunction(chromosome)
                 if self.config.FITNESS_CATEGORY == 'minimize':
                     fitnessValue *= -1
                 chromosome.originalFitness = fitnessValue
@@ -103,19 +103,3 @@ class GeneticUtility(object):
             self.GENERATION_COUNT += 1
             chromosomes = nextGenChromosomes
         return bestIndividual
-
-        
-
-    def fitness(self, chromosome):
-        testChrom = Chromosome(self.config)
-        testChrom.genes = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-        fitness = 0.0
-
-        for i in range(0, len(testChrom.genes)):
-            fitness += pow((chromosome.genes[i] - testChrom.genes[i]), 2)
-        return fitness
-    
-
-config = Config()
-g = GeneticUtility(config)
-print(g.simulateEvolution(100).genes)
