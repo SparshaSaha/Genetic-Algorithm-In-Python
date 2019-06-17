@@ -6,10 +6,9 @@ import numpy as np
 sys.path.insert(0, '/home/sparsha/ProjectWork/gitprojects/GeneticAlgorithmLibrary/')
 
 from GeneticUtility import GeneticUtility
-from Config import Config
 
 # Define fitness function
-def fitness(chromosome):
+def fitnessFunction(chromosome):
     fitness = 0
     for i in range(0, len(imageFlattened)):
         fitness += pow((imageFlattened[i] - chromosome.genes[i]), 2)
@@ -17,7 +16,7 @@ def fitness(chromosome):
     return fitness    
 
 # Read example image
-image = cv2.imread('/home/sparsha/ProjectWork/gitprojects/GeneticAlgorithmLibrary/Examples/cross.jpg', 0)
+image = cv2.imread('/home/sparsha/ProjectWork/gitprojects/GeneticAlgorithmLibrary/Examples/s.jpg', 0)
 
 # Convert Image to List
 imageFlattened = image.flatten().tolist()
@@ -32,6 +31,9 @@ for i in range(0, len(imageFlattened)):
 
 image = np.reshape(imageFlattened, (20, 20)) * 255.0
 
+# Step Executor Function
+# Called after Each Generation for Any Action That the Programmer might want to execute
+# Here we use this method to show the formed image at each step
 def stepExecutor(generationNumber, bestIndividual):
     bestIndividual = np.array(bestIndividual.genes)
     bestIndividual = bestIndividual * 255.0
@@ -44,7 +46,7 @@ def stepExecutor(generationNumber, bestIndividual):
     key = cv2.waitKey(1)
 
 util = GeneticUtility()
-x = util.simulateEvolution(300, fitness, stepExecution = stepExecutor)
+x = util.simulateEvolution(300, fitnessFunction, stepExecution = stepExecutor)
 x = np.array(x.genes)
 x = x * 255.0
 x = np.reshape(x, (20, 20))

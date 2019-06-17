@@ -17,6 +17,8 @@ class GeneticUtility(object):
         # Randomly create a crossover point
         crossoverPoint = random.randint(1, len(chromosome1.genes) - 1)
 
+# ------------------------------------Recombination Steps---------------------------------------------------------
+
         # Prepare child genes
         child1Genes = chromosome1.genes[0 : crossoverPoint] + chromosome2.genes[crossoverPoint : ]
         child2Genes = chromosome2.genes[0 : crossoverPoint] + chromosome1.genes[crossoverPoint : ]
@@ -40,6 +42,8 @@ class GeneticUtility(object):
         # Find minimum fitness
         minimumFitness = min(chromosome.fitness for chromosome in chromosomes)
 
+        # Origin shift only if fitnesses are negative
+        # Here we are trying to make all fitnesses as positive values for easier execution
         if minimumFitness >= 0:
             return
         
@@ -50,10 +54,16 @@ class GeneticUtility(object):
         chromosomes = [Chromosome(self.config) for i in range(0, self.config.POPULATION_SIZE)]
         bestIndividual = Chromosome(self.config)
         bestIndividual.fitness = -1
-        
+
+# ----------------------------Start Training---------------------------------------------------------------
+
         for generation in range(0, noOfGeneration):
             print("Running for Generation " + str(self.GENERATION_COUNT))
-            self.selectedChromosomes = {}
+            
+            # Map of already created chromosomes
+            # Helps to avoid including duplicate chromosomes which might mess with the algorithm
+            self.selectedChromosomes = {} 
+
             # Calculate Fitnesses
             for chromosome in chromosomes:
                 fitnessValue = fitnessFunction(chromosome)
@@ -68,10 +78,11 @@ class GeneticUtility(object):
             # Origin shift chromosomes in case of negative fitness values
             self.__originShiftIfNegativeFitnesses__(chromosomes)
 
+            # Create Roulette Wheel for Current Generation
             rouletteWheel = RouletteWheel(chromosomes, self.config)
             nextGenChromosomes = []
 
-            # Create next Generation
+            # Create next Generation by selection
             for i in range(0, int(self.config.POPULATION_SIZE / 2)):
                 # Select two chromosomes from roulette wheel
                 chromosome1, chromosome2 = rouletteWheel.RouletteWheelSelection()
@@ -92,7 +103,7 @@ class GeneticUtility(object):
                     nextGenChromosomes.append(chromosome2)
                     self.selectedChromosomes[str(chromosome2.genes)] = 1
             
-            # Add Elites to next Generation
+#------------------------------Add Elites to next Generation--------------------------------------
             
             # Sort Chromosomes based on fitness values
             chromosomes.sort(key = lambda x : x.fitness, reverse = True)
