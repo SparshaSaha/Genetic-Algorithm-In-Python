@@ -7,9 +7,10 @@ from SelectionAlgorithms.RouletteWheel import RouletteWheel
 
 class GeneticUtility(object):
 
-    def __init__(self, config):
-        self.config = config
+    def __init__(self):
+        self.config = Config()
         self.GENERATION_COUNT = 0
+        self.selectedChromosomes = {}
     
     def __crossover__(self, chromosome1, chromosome2):
         
@@ -23,12 +24,12 @@ class GeneticUtility(object):
         chromosomeToConsider1 = Chromosome(self.config)
         chromosomeToConsider2 = Chromosome(self.config)
 
-        if random.uniform(0, 1) <= config.CROSSOVER_PROBABILITY:
+        if random.uniform(0, 1) <= self.config.CROSSOVER_PROBABILITY:
             chromosomeToConsider1.genes = child1Genes
         else:
             chromosomeToConsider1.genes = chromosome1.genes.copy()
         
-        if random.uniform(0, 1) <= config.CROSSOVER_PROBABILITY:
+        if random.uniform(0, 1) <= self.config.CROSSOVER_PROBABILITY:
             chromosomeToConsider2.genes = child2Genes
         else:
             chromosomeToConsider2.genes = chromosome2.genes.copy()
@@ -45,23 +46,23 @@ class GeneticUtility(object):
         for chromosome in chromosomes:
             chromosome.fitness += minimumFitness * -1
     
-    def simulateEvolution(self, noOfGeneration, fitnessFunction):
+    def simulateEvolution(self, noOfGeneration, fitnessFunction, stepExecution = None):
         chromosomes = [Chromosome(self.config) for i in range(0, self.config.POPULATION_SIZE)]
         bestIndividual = Chromosome(self.config)
         bestIndividual.fitness = -1
         
         for generation in range(0, noOfGeneration):
             print("Running for Generation " + str(self.GENERATION_COUNT))
-
+            self.selectedChromosomes = {}
             # Calculate Fitnesses
             for chromosome in chromosomes:
                 fitnessValue = fitnessFunction(chromosome)
+                chromosome.originalFitness = fitnessValue
 
                 if self.config.FITNESS_CATEGORY == 'minimize':
-                    
+
                     # Reverse fitness in case of reverse category
                     fitnessValue *= -1
-                chromosome.originalFitness = fitnessValue
                 chromosome.fitness = fitnessValue
             
             # Origin shift chromosomes in case of negative fitness values
@@ -82,9 +83,14 @@ class GeneticUtility(object):
                 chromosome1.mutate()
                 chromosome2.mutate()
 
-                # Add them to the New Generation Pool
-                nextGenChromosomes.append(chromosome1)
-                nextGenChromosomes.append(chromosome2)
+                # Add them to the New Generation Pool if genes are unique
+                if (str(chromosome1.genes) not in self.selectedChromosomes):
+                    nextGenChromosomes.append(chromosome1)
+                    self.selectedChromosomes[str(chromosome1.genes)] = 1
+
+                if (str(chromosome2.genes) not in self.selectedChromosomes):
+                    nextGenChromosomes.append(chromosome2)
+                    self.selectedChromosomes[str(chromosome2.genes)] = 1
             
             # Add Elites to next Generation
             
@@ -92,18 +98,23 @@ class GeneticUtility(object):
             chromosomes.sort(key = lambda x : x.fitness, reverse = True)
             
             # Save best individual
-            if chromosomes[0].fitness > bestIndividual.fitness:
-                bestIndividual = chromosomes[0]
+            bestIndividual = copy.deepcopy(chromosomes[0])
             
             # Check if Ideal fitness has been reached
             # If so, then return
             if bestIndividual.originalFitness == self.config.IDEAL_FITNESS:
                 return bestIndividual
             
-            # Carry over Elites to next Generation
+            # Carry over Elites to next Generation if they donot already exist
             for i in range(0, self.config.ELITE_CARRY_OVER):
-                nextGenChromosomes[len(nextGenChromosomes) - i - 1] = chromosomes[len(chromosomes) - i -1]
+                if (str(chromosomes[i].genes) not in self.selectedChromosomes):
+                    nextGenChromosomes[len(nextGenChromosomes) - i - 1] = copy.deepcopy(chromosomes[i])
             
+            # Execute Stepper
+            if stepExecution != None:
+                stepExecution(generationNumber = self.GENERATION_COUNT, bestIndividual = chromosomes[0])
+
             self.GENERATION_COUNT += 1
+            print("best " + str(chromosomes[0].originalFitness))
             chromosomes = nextGenChromosomes
         return bestIndividual
