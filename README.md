@@ -32,3 +32,15 @@ self.FITNESS_CATEGORY = "minimize"
 self.CROSSOVER_PROBABILITY = 0.95
 self.GENE_TYPE = "binary"
 ```
+These variables can be modified at the start of the program as well as during runtime for added flexibility.
+
+### Chromosome.py
+```
+def mutate():
+# Helps to mutate a Gene
+```
+
+```
+def __flipGene__():
+# Helps to flip a Gene
+```
