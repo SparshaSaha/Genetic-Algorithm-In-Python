@@ -16,3 +16,19 @@ Besides they probably run inly for Python2.x. I wanted a relatively simple Genet
 
 Thus I decided to make one on my own. Besides I thought this would help me with an indepth understanding of the Algorithm if I can implement it.
 And here we are.. :grin:
+
+## Project Description
+
+### Config.py
+This file consists of the configuration variables that the user needs to set or modify. These configuration variables define the basis of the algorithm and can make all the difference.
+
+```
+self.NO_OF_GENES = 400
+self.MUTATION_PROBABILITY = 0.002
+self.POPULATION_SIZE = 600
+self.IDEAL_FITNESS = 0
+self.ELITE_CARRY_OVER = 20
+self.FITNESS_CATEGORY = "minimize"
+self.CROSSOVER_PROBABILITY = 0.95
+self.GENE_TYPE = "binary"
+```
