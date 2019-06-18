@@ -44,3 +44,44 @@ def mutate():
 def __flipGene__():
 # Helps to flip a Gene
 ```
+
+### Roulette Wheel
+This is a selection algorithm that I have implemented which helps in selection of individuals for reproduction
+
+```
+def __createCumulativeProabilities___():
+# creates cumulative probabilities for the chromsomes passed as an argument
+```
+
+```
+def __getNomalizedFitness__():
+# Get nirmalized fitness values for each chromosome
+```
+
+```
+def __calculateCumulativeSum__():
+# Calculate cumulative sum for the batch of chromosomes
+```
+
+```
+def RouletteWheelSelection():
+# Returns two chromosomes from the current Pool based on their probability of selections
+```
+
+### GeneticUtility.py
+ ```
+ def __crossover__():
+ # Returns two children from crossover between two parents
+ ```
+ 
+ ```
+ def __originShiftIfNegativeFitnesses__():
+ # If fitnesses are negative then origin shift them so that they are all positives
+ ```
+ 
+ ```
+def simulateEvolution():
+# Runs the simulation for 'n' generations(supplied as an argument).
+# Fitness function passed to it as an argument
+# Returns best individual
+```
