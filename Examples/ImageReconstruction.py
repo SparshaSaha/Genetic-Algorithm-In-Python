@@ -6,6 +6,7 @@ import numpy as np
 sys.path.insert(0, '/home/sparsha/ProjectWork/gitprojects/GeneticAlgorithmLibrary/')
 
 from GeneticUtility import GeneticUtility
+from Config import Config
 
 # Define fitness function
 def fitnessFunction(chromosome):
@@ -45,7 +46,7 @@ def stepExecutor(generationNumber, bestIndividual):
     cv2.imshow("formed image", bestIndividual)
     key = cv2.waitKey(1)
 
-util = GeneticUtility()
+util = GeneticUtility(Config())
 x = util.simulateEvolution(300, fitnessFunction, stepExecution = stepExecutor)
 x = np.array(x.genes)
 x = x * 255.0
