@@ -101,4 +101,36 @@ from GeneticUtility import GeneticUtility
 from Config import Config
 ```
 
+**Step 2 :**
+Define the Fitness Function
 
+```
+def fitnessFunction(chromosome):
+```
+
+**Step 3 :**
+Define step Executor Function.
+
+This fucntion will be called by the main module after every generation.
+
+Can be used for logging ec.
+
+```
+def stepExecutor():
+# Called with generation number and best Individual for that generation
+```
+**Step 4 :**
+Create GeneticUtility Object
+
+```
+util = GeneticUtility(Config())
+```
+
+**Step 5 :**
+Call simulateEvolution Method with number of generations, fitness function and stepExecutor
+
+```
+bestIndividual = util.simulateEvolution(300, fitnessFunction, stepExecution = stepExecutorMethod)
+```
+
+This method returns the bestIndividual Object
