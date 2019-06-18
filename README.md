@@ -69,6 +69,7 @@ def RouletteWheelSelection():
 ```
 
 ### GeneticUtility.py
+ 
  ```
  def __crossover__():
  # Returns two children from crossover between two parents
@@ -85,3 +86,19 @@ def simulateEvolution():
 # Fitness function passed to it as an argument
 # Returns best individual
 ```
+## How to Use the Library
+Using the library is pretty simple and straight forward.
+
+I have formulated some examples in the **/Examples** folder.
+
+Additionally, lets have a look here:
+
+**Step 1 :**
+Import GeneticUtility and Config
+
+```
+from GeneticUtility import GeneticUtility
+from Config import Config
+```
+
+
